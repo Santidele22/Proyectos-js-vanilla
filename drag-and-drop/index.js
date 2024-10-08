@@ -2,10 +2,10 @@ const dropZone = document.querySelectorAll(".box");
 const items = document.querySelectorAll("img");
 const resetContainer = document.querySelector(".reset");
 const container = document.querySelector(".card-container");
-
 const title = document.querySelector("#title");
 //variable
 let attempts = 0;
+
 items.forEach((item) =>
   item.addEventListener("dragstart", (ev) => {
     ev.dataTransfer.setData("text/plain", item.id);
@@ -20,22 +20,24 @@ dropZone.forEach((e) =>
   e.addEventListener("drop", (ev) => {
     const id = ev.dataTransfer.getData("text/plain");
     const item = document.querySelector("#" + id);
+
     if (id === e.id) {
       e.textContent = "";
       e.append(item);
+      gameWin();
     } else {
       attempts++;
-      alert("Incorrecto");
+      alert("Incorrecto! te quedan " + (3 - attempts) + " intentos");
     }
-    gameOver();
+    if (attempts === 3) {
+      gameOver();
+    }
   })
 );
 
 function gameOver() {
-  if (attempts === 3) {
-    title.textContent = "Perdiste!! Sos un fracasado de la vida";
-    createBtn();
-  }
+  title.textContent = "Perdiste!! Sos un fracasado de la vida";
+  createBtn();
 }
 
 function reset() {
@@ -43,11 +45,28 @@ function reset() {
   title.textContent = "Arrastra donde corresponda";
   container.textContent = "";
   dropZone.forEach((e) => (e.textContent = e.id));
+
+  // Restablecer las imágenes a su contenedor original
+  items.forEach((item) => {
+    const imageContainer = document.createElement("figure");
+    imageContainer.setAttribute("class", "image-container");
+
+    imageContainer.appendChild(item);
+    container.appendChild(imageContainer);
+  });
+
+  resetContainer.textContent = "";
 }
 
 function gameWin() {
-  title.textContent = "Felicitaciones haz ganado el juego!!!!";
-  createBtn();
+  const allHaveImage = Array.from(dropZone).every((box) =>
+    box.querySelector("img")
+  );
+  if (allHaveImage) {
+    console.log("entro ");
+    title.textContent = "Felicitaciones haz ganado!!";
+    createBtn();
+  }
 }
 
 const createBtn = () => {
