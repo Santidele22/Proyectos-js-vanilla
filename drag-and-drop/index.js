@@ -63,7 +63,6 @@ function gameWin() {
     box.querySelector("img")
   );
   if (allHaveImage) {
-    console.log("entro ");
     title.textContent = "Felicitaciones haz ganado!!";
     createBtn();
   }
